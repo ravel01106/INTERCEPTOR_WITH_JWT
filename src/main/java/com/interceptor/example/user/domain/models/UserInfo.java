@@ -1,4 +1,4 @@
-package com.interceptor.example.user.domain;
+package com.interceptor.example.user.domain.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
