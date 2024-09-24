@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -13,12 +15,17 @@ public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "user_id")
   private Long id;
 
   @Column(name = "username", unique = true)
   private String username;
 
   private String password;
+
+  @OneToOne
+  @JoinColumn(name = "username", referencedColumnName = "username")
+  private UserInfo userInfo;
 
   public User(Long id, String username, String password) {
     this.id = id;
@@ -57,5 +64,20 @@ public class User {
   public void setPassword(String password) {
     this.password = password;
   }
+
+  public UserInfo getUserInfo() {
+    return userInfo;
+  }
+
+  public void setUserInfo(UserInfo userInfo) {
+    this.userInfo = userInfo;
+  }
+
+  @Override
+  public String toString() {
+    return "User [id=" + id + ", username=" + username + ", password=" + password + "]";
+  }
+
+
 
 }
