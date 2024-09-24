@@ -1,8 +1,6 @@
 
 # Levantaremos dos servicios: MySQL 8 y phpMyAdmin
 
-version: '3.7'
-
 services:
   mysql:
     image: mysql:8
