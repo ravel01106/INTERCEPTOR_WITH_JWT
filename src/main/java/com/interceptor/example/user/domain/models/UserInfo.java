@@ -1,11 +1,11 @@
 package com.interceptor.example.user.domain.models;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -18,7 +18,8 @@ public class UserInfo {
   @Column(name = "userinfo_id")
   private Long id;
 
-  @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne
+  @JoinColumn(name = "username", referencedColumnName = "username")
   private User user;
 
   private String name;

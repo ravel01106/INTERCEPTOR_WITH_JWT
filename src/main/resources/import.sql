@@ -1,2 +1,3 @@
-insert into users(username, password) values ("admin", "admin")
-insert into users_info(username, name, lastname, email) values("admin", "administrator", "administrator", "administrator@gmail.com")
+INSERT INTO users (username, password) VALUES ('admin', 'admin');
+
+INSERT INTO users_info (name, lastname, email, username) VALUES ('Administrator', 'Administrator', 'administrator@gmail.com', 'admin');
