@@ -9,7 +9,7 @@ services:
     container_name: 'Pruebas-MySQL'
     environment:
       MYSQL_ROOT_PASSWORD: mysql
-      MYSQL_DATABASE: db_veterinary
+      MYSQL_DATABASE: db_example_authentication
       MYSQL_USER: usuarioexterno
       MYSQL_PASSWORD: adminadmin
     ports:
