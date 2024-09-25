@@ -3,7 +3,9 @@ package com.interceptor.example.user.infrastructure;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.interceptor.example.user.domain.errors.UserInfoException;
+import com.interceptor.example.user.domain.errors.AlrreadyExistsException;
+import com.interceptor.example.user.domain.errors.ErrorCreateException;
+import com.interceptor.example.user.domain.errors.NotFoundException;
 import com.interceptor.example.user.domain.models.UserInfo;
 import com.interceptor.example.user.domain.services.UserInfoService;
 
@@ -31,28 +33,28 @@ public class UserInfoController {
   }
 
   @GetMapping("/user/{username}")
-  public ResponseEntity<UserInfo> getUserInfoByUsername(@PathVariable String username) throws UserInfoException {
+  public ResponseEntity<UserInfo> getUserInfoByUsername(@PathVariable String username) throws NotFoundException {
       UserInfo userInfo = userInfoService.getUserInformationByUsername(username);
 
       if (userInfo == null){
-        throw new UserInfoException("This user does not exists");
+        throw new NotFoundException("This user does not exists");
       }
 
       return new ResponseEntity<>(userInfo, HttpStatus.OK);
   }
 
   @PostMapping("/user")
-  public ResponseEntity<UserInfo> createUserInfo(@RequestBody UserInfo userInfo) throws UserInfoException {
+  public ResponseEntity<UserInfo> createUserInfo(@RequestBody UserInfo userInfo) throws AlrreadyExistsException, ErrorCreateException {
       UserInfo userInfoInDB = userInfoService.getUserInformationByUsername(userInfo.getUser().getUsername());
 
       if (userInfoInDB != null){
-        throw new UserInfoException("This user already exists");
+        throw new AlrreadyExistsException("This user already exists");
       }
 
       UserInfo newUserInfo = userInfoService.createUserInfo(userInfo);
 
       if (newUserInfo == null) {
-        throw new UserInfoException("ERROR to create user information");
+        throw new ErrorCreateException("ERROR to create user information");
       }
 
       return new ResponseEntity<>(newUserInfo, HttpStatus.CREATED);
