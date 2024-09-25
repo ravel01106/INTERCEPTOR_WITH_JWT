@@ -81,7 +81,7 @@ public class UserInfo {
 
   @Override
   public String toString() {
-    return "UserInfo [id=" + id + ", user=" + user + ", name=" + name + ", lastname=" + lastname + ", email=" + email
+    return "UserInfo [id=" + id + ", username=" + user.getUsername() + ", name=" + name + ", lastname=" + lastname + ", email=" + email
         + "]";
   }
 

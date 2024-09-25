@@ -6,11 +6,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.interceptor.example.user.domain.errors.AlrreadyExistsException;
 import com.interceptor.example.user.domain.errors.ErrorCreateException;
 import com.interceptor.example.user.domain.errors.NotFoundException;
+import com.interceptor.example.user.domain.models.User;
 import com.interceptor.example.user.domain.models.UserInfo;
 import com.interceptor.example.user.domain.services.UserInfoService;
+import com.interceptor.example.user.domain.services.UserService;
+import com.interceptor.example.user.infrastructure.DTO.UserInfoDTO;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +28,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/v1/usersinfo")
 public class UserInfoController {
 
+  @Autowired
   private UserInfoService userInfoService;
 
-  @GetMapping("/")
+  @Autowired
+  private UserService userService;
+
+  @GetMapping("/users")
   public ResponseEntity<List<UserInfo>> getAllUsersInfo() {
     List<UserInfo> usersInfo = userInfoService.getAllUsersInformation();
       return new ResponseEntity<>(usersInfo, HttpStatus.OK);
@@ -44,18 +52,26 @@ public class UserInfoController {
   }
 
   @PostMapping("/user")
-  public ResponseEntity<UserInfo> createUserInfo(@RequestBody UserInfo userInfo) throws AlrreadyExistsException, ErrorCreateException {
-      UserInfo userInfoInDB = userInfoService.getUserInformationByUsername(userInfo.getUser().getUsername());
+  public ResponseEntity<UserInfo> createUserInfo(@RequestBody UserInfoDTO userInfoDTO) throws AlrreadyExistsException, ErrorCreateException, NotFoundException {
+    User userInDB = userService.getUserByUsername(userInfoDTO.getUsername());
 
-      if (userInfoInDB != null){
-        throw new AlrreadyExistsException("This user already exists");
-      }
+    if (userInDB == null){
+      throw new NotFoundException("This user does not exists");
+    }
 
-      UserInfo newUserInfo = userInfoService.createUserInfo(userInfo);
+    UserInfo userInfoInDB = userInfoService.getUserInformationByUsername(userInfoDTO.getUsername());
 
-      if (newUserInfo == null) {
-        throw new ErrorCreateException("ERROR to create user information");
-      }
+    if (userInfoInDB != null){
+      throw new AlrreadyExistsException("This user information already exists");
+    }
+
+    UserInfo newUserInfo = new UserInfo(userInDB, userInfoDTO.getName(), userInfoDTO.getLastname(), userInfoDTO.getEmail());
+
+    UserInfo userInfoResultOperationCreated = userInfoService.createUserInfo(newUserInfo);
+
+    if (userInfoResultOperationCreated == null) {
+      throw new ErrorCreateException("ERROR to create user information");
+    }
 
       return new ResponseEntity<>(newUserInfo, HttpStatus.CREATED);
   }

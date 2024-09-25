@@ -49,7 +49,7 @@ public class UserController {
   public ResponseEntity<User> register(@RequestBody User user) throws ErrorCreateException, AlrreadyExistsException {
     User userFindByUsername = userService.getUserByUsername(user.getUsername());
 
-    if (userFindByUsername == null) {
+    if (userFindByUsername != null) {
       throw new AlrreadyExistsException("The user already exists");
     }
 
