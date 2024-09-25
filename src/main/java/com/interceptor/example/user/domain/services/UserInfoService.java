@@ -8,7 +8,7 @@ public interface UserInfoService {
 
   List<UserInfo> getAllUsersInformation();
 
-  UserInfo getUserInformationByUsername();
+  UserInfo getUserInformationByUsername(String username);
 
   UserInfo createUserInfo(UserInfo userInfo);
 
