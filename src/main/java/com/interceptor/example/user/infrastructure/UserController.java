@@ -57,7 +57,7 @@ public class UserController {
         throw new UserException("ERROR register user");
     }
 
-    return new ResponseEntity<User>(userRegister, HttpStatus.OK);
+    return new ResponseEntity<User>(userRegister, HttpStatus.CREATED);
   }
 
 }
