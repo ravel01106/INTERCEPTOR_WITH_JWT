@@ -6,4 +6,5 @@ public interface UserService {
   User login(User user);
   Boolean logout(User user);
   User register(User user);
+  User getUserByUsername(String username);
 }
