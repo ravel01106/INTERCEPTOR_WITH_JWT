@@ -1,12 +1,10 @@
 package com.interceptor.example.user.domain.models;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,9 +20,6 @@ public class User {
   private String username;
 
   private String password;
-
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-  private UserInfo userInfo;
 
   public User(Long id, String username, String password) {
     this.id = id;
@@ -64,19 +59,9 @@ public class User {
     this.password = password;
   }
 
-  public UserInfo getUserInfo() {
-    return userInfo;
-  }
-
-  public void setUserInfo(UserInfo userInfo) {
-    this.userInfo = userInfo;
-  }
-
   @Override
   public String toString() {
     return "User [id=" + id + ", username=" + username + ", password=" + password + "]";
   }
-
-
 
 }
