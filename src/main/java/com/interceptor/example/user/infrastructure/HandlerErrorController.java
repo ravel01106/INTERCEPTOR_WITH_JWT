@@ -21,13 +21,13 @@ public class HandlerErrorController {
     return new ResponseEntity<>(new ErrorMessage(ex.getMessage(), ErrorType.ALREADY_EXISTS), HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(AlrreadyExistsException.class)
+  @ExceptionHandler(NotFoundException.class)
   public ResponseEntity<ErrorMessage> handlerErrorNotFound(NotFoundException ex){
 
     return new ResponseEntity<>(new ErrorMessage(ex.getMessage(), ErrorType.NOT_FOUND), HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(AlrreadyExistsException.class)
+  @ExceptionHandler(ErrorCreateException.class)
   public ResponseEntity<ErrorMessage> handlerErrorCreate(ErrorCreateException ex){
 
     return new ResponseEntity<>(new ErrorMessage(ex.getMessage(), ErrorType.ERROR_CREATE), HttpStatus.BAD_REQUEST);

@@ -4,7 +4,7 @@
 services:
   mysql:
     image: mysql:8
-    container_name: 'Pruebas-MySQL'
+    container_name: 'Pruebas-MySQL-2'
     environment:
       MYSQL_ROOT_PASSWORD: mysql
       MYSQL_DATABASE: db_example_authentication
@@ -15,7 +15,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
-    container_name: 'Pruebas_phpMyAdmin'
+    container_name: 'Pruebas_phpMyAdmin-2'
     ports:
       - 8080:80
     environment:
