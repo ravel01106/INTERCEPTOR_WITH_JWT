@@ -1,63 +1,78 @@
 package com.interceptor.example.auth.domain;
 
-import java.util.Base64;
 import java.util.Date;
-import java.util.function.Function;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
-@Component
 public class JwtAuthorization {
 
-  private final String SECRET = "My-Secret";
+  private String token;
 
-  private final SecretKey SECRET_KEY = new SecretKeySpec(Base64.getDecoder().decode(SECRET), SignatureAlgorithm.HS256.getJcaName());
+  private Date expiration;
 
+  private String username;
 
-  public String generateToken(String username) {
-    return Jwts.builder()
-            .setSubject(username)
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
-            .signWith(SECRET_KEY)
-            .compact();
+  public JwtAuthorization(String token, Date expiration, String username) {
+    this.token = token;
+    this.expiration = expiration;
+    this.username = username;
   }
 
-  public Boolean validateToken(String token, String username) {
-    final String tokenUsername = extractUsername(token);
-    return (tokenUsername.equals(username) && !isTokenExpired(token));
+  public JwtAuthorization() {
   }
 
-  public String extractUsername(String token) {
-      return extractClaim(token, Claims::getSubject);
+  public String getToken() {
+    return token;
   }
 
-  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-    final Claims claims = extractAllClaims(token);
-    return claimsResolver.apply(claims);
+  public void setToken(String token) {
+    this.token = token;
   }
 
-  private Claims extractAllClaims(String token) {
-    return Jwts.parserBuilder()
-            .setSigningKey(SECRET_KEY)
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+  public Date getExpiration() {
+    return expiration;
   }
 
-  private Boolean isTokenExpired(String token) {
-    return extractExpiration(token).before(new Date());
+  public void setExpiration(Date expiration) {
+    this.expiration = expiration;
   }
 
-  private Date extractExpiration(String token) {
-    return extractClaim(token, Claims::getExpiration);
+  public String getUsername() {
+    return username;
   }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((token == null) ? 0 : token.hashCode());
+    result = prime * result + ((expiration == null) ? 0 : expiration.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    JwtAuthorization other = (JwtAuthorization) obj;
+    if (token == null) {
+      if (other.token != null)
+        return false;
+    } else if (!token.equals(other.token))
+      return false;
+    if (expiration == null) {
+      if (other.expiration != null)
+        return false;
+    } else if (!expiration.equals(other.expiration))
+      return false;
+    return true;
+  }
+
 
 }
