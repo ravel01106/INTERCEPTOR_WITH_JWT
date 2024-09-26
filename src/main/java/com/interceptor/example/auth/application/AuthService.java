@@ -37,21 +37,21 @@ public class AuthService {
     .signWith(SECRET_KEY)
     .compact();
 
-    JwtAuthorization jwtAuthorization = new JwtAuthorization(token, expirationDate, username);
+     JwtAuthorization jwtAuthorization = new JwtAuthorization(token, expirationDate, username);
 
     return jwtAuthorization;
   }
 
 
-  public Boolean validateToken(String token, String username, JwtAuthorization jwtAuthorization) {
+  public Boolean validateToken(JwtAuthorization jwtAuthorizationCheck) {
 
 
     Jws<Claims> jws = null;
 
-    jws = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(jwtAuthorization.getToken());
+    jws = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(jwtAuthorizationCheck.getToken());
 
     if (jws != null) {
-      Boolean isCorrectUsername = jws.getBody().getIssuer().equals(jwtAuthorization.getUsername());
+      Boolean isCorrectUsername = jws.getBody().getSubject().equals(jwtAuthorizationCheck.getUsername());
       Boolean isNotExpired = (jws.getBody().getExpiration().compareTo(new Date()) > 0)
         && (jws.getBody().getNotBefore().compareTo(new Date()) > 0);
 
@@ -60,6 +60,15 @@ public class AuthService {
     }
     return false;
 
+  }
+
+  public JwtAuthorization getJwtAuthorization(String token){
+    return new JwtAuthorization(token, getBodyToken(token).getExpiration(), getBodyToken(token).getSubject());
+  }
+
+
+  private Claims getBodyToken(String token){
+    return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();
   }
 
 }
