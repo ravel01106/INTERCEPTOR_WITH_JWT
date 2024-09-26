@@ -1,4 +1,4 @@
-package com.interceptor.example.user.infrastructure;
+package com.interceptor.example.user.infrastructure.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
