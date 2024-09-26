@@ -2,6 +2,8 @@ package com.interceptor.example.user.infrastructure.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.interceptor.example.auth.application.AuthService;
+import com.interceptor.example.auth.domain.JwtAuthorization;
 import com.interceptor.example.user.domain.errors.AlrreadyExistsException;
 import com.interceptor.example.user.domain.errors.ErrorCreateException;
 import com.interceptor.example.user.domain.errors.NotFoundException;
@@ -21,15 +23,19 @@ public class UserController {
   @Autowired
   UserService userService;
 
+  @Autowired
+  AuthService authService;
+
   @PostMapping("/login")
-  public ResponseEntity<User> login(@RequestBody User user) throws NotFoundException {
+  public ResponseEntity<JwtAuthorization> login(@RequestBody User user) throws NotFoundException {
       User userLogin = userService.login(user);
 
       if (userLogin == null){
         throw new NotFoundException("User incorrect");
       }
 
-      return new ResponseEntity<User>(userLogin, HttpStatus.OK);
+      JwtAuthorization jwtAuthorization = authService.generateToken(userLogin.getUsername());
+      return new ResponseEntity<JwtAuthorization>(jwtAuthorization, HttpStatus.OK);
   }
 
   @PostMapping("/api/v1/logout")
@@ -44,7 +50,7 @@ public class UserController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<User> register(@RequestBody User user) throws ErrorCreateException, AlrreadyExistsException {
+  public ResponseEntity<JwtAuthorization> register(@RequestBody User user) throws ErrorCreateException, AlrreadyExistsException {
     User userFindByUsername = userService.getUserByUsername(user.getUsername());
 
     if (userFindByUsername != null) {
@@ -57,7 +63,8 @@ public class UserController {
         throw new ErrorCreateException("ERROR register user");
     }
 
-    return new ResponseEntity<User>(userRegister, HttpStatus.CREATED);
+    JwtAuthorization jwtAuthorization = authService.generateToken(userRegister.getUsername());
+    return new ResponseEntity<JwtAuthorization>(jwtAuthorization, HttpStatus.CREATED);
   }
 
 }

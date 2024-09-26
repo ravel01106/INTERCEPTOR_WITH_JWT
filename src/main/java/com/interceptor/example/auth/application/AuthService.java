@@ -1,7 +1,7 @@
 package com.interceptor.example.auth.application;
 
-import java.util.Base64;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.interceptor.example.auth.domain.JwtAuthorization;
@@ -9,19 +9,18 @@ import com.interceptor.example.auth.domain.JwtAuthorization;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Service
 public class AuthService {
 
-   private final String SECRET = "My-Secret";
-
-  private final SecretKey SECRET_KEY = new SecretKeySpec(Base64.getDecoder().decode(SECRET), SignatureAlgorithm.HS256.getJcaName());
+  private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+  private final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);;
 
 
   public JwtAuthorization generateToken(String username) {
@@ -49,11 +48,12 @@ public class AuthService {
     Jws<Claims> jws = null;
 
     jws = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(jwtAuthorizationCheck.getToken());
-
+    logger.info("is null?: " + jws);
     if (jws != null) {
       Boolean isCorrectUsername = jws.getBody().getSubject().equals(jwtAuthorizationCheck.getUsername());
-      Boolean isNotExpired = (jws.getBody().getExpiration().compareTo(new Date()) > 0)
-        && (jws.getBody().getNotBefore().compareTo(new Date()) > 0);
+      logger.info("is correct username?: " + isCorrectUsername);
+      Boolean isNotExpired = (jws.getBody().getExpiration().compareTo(new Date()) > 0);
+        logger.info("is not expired?: " + isNotExpired);
 
 
       return isCorrectUsername && isNotExpired;
