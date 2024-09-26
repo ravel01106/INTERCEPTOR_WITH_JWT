@@ -1,6 +1,5 @@
 package com.interceptor.example.user.infrastructure.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.interceptor.example.user.domain.errors.AlrreadyExistsException;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/api/v1/user")
 public class UserController {
 
   @Autowired
@@ -34,7 +32,7 @@ public class UserController {
       return new ResponseEntity<User>(userLogin, HttpStatus.OK);
   }
 
-  @PostMapping("/logout")
+  @PostMapping("/api/v1/logout")
   public ResponseEntity<String> logout(@RequestBody User user) throws NotFoundException {
       Boolean isUserLogout = userService.logout(user);
 
