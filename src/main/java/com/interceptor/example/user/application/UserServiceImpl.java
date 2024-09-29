@@ -11,7 +11,7 @@ import com.interceptor.example.user.domain.services.UserService;
 public class UserServiceImpl implements UserService{
 
   @Autowired
-  UserRepository userRepository;
+  private UserRepository userRepository;
 
   @Override
   public User login(User user) {
