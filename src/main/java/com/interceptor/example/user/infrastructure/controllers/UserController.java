@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
 
   @Autowired
-  UserService userService;
+  private UserService userService;
 
   @Autowired
-  AuthService authService;
+  private AuthService authService;
 
   @PostMapping("/login")
   public ResponseEntity<JwtAuthorization> login(@RequestBody User user) throws NotFoundException {
