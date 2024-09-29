@@ -1,0 +1,24 @@
+
+# Levantaremos dos servicios: MySQL 8 y phpMyAdmin
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: 'Pruebas-MySQL-2'
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: db_example_authentication
+      MYSQL_USER: usuarioexterno
+      MYSQL_PASSWORD: adminadmin
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: 'Pruebas_phpMyAdmin-2'
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=mysql
+    depends_on:
+      - mysql
