@@ -25,7 +25,7 @@ public class AuthInterceptor implements HandlerInterceptor {
   private static final String AUTH_HEADER_PARAMETER_AUTHERIZATION = "Authorization";
 
   @Autowired
-  AuthService authService;
+  private AuthService authService;
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -57,10 +57,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     response.setStatus(401);
     response.getWriter().write(jsonString);
     return false;
-
   }
 
-   @Override
+  @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
     ModelAndView modelAndView) throws Exception {
     logger.info("LoadingTimeInterceptor: postHandle() saliendo ....");
